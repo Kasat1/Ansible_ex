@@ -1,0 +1,46 @@
+- name: WordPress Stack
+  hosts: app
+  become: true
+  become_user: root
+
+  vars: 
+    users:
+    - { name: Siarhei, id: 004 }
+    - { name: James, id: 003 }
+    - { name: Phillip, id: 002 }
+    - { name: Veronika, id: 001 }
+    - { name: Vernon, id: 001 }
+
+  tasks:
+
+    - name: Boostrap
+      include_role:
+        name: "boostrap"
+
+    - name: Docker
+      include_role:
+        name: "ansible-role-docker"
+
+    - name: Users
+      include_role:
+        name: "user"
+      vars:
+        username: "{{ item.name }}"
+        userid: "{{ item.id }}"
+      loop: "{{ users }}"
+
+    - name: MySQl
+      include_role:
+        name: "mysql"
+      vars: 
+        mysql: "{{ mysql_params }}"
+
+    - name: Run Wordpress
+      include_role: 
+        name: "wordpress"
+      vars: 
+        wp: "{{ wp_params }}"
+        mysql: "{{ mysql_params }}"
+        username: "{{ item.name }}"
+      loop: "{{ users }}"
+

@@ -1,0 +1,21 @@
+- name: Run
+  shell: rm /usr/bin/python && ln -s /usr/bin/python2 /usr/bin/python
+
+- name: Install packages
+  package:
+    name:
+    - epel-release
+    - python3
+    - python3-pip
+    state: present
+
+- name: update python
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: python packages
+  pip:
+   name:
+   - requests
+   - docker-py
+   executable: pip3

@@ -1,0 +1,30 @@
+- name: Create mysql data
+  ansible.builtin.file: 
+    path: "{{ mysql.docker_volume }}"
+    owner: "root"
+    group: "root"
+    state: directory
+
+- name: Launch container wih mysql
+  docker_container:
+    name: "{{ mysql.db_name }}"
+    image: "{{ mysql.docker_image }}"
+    volumes: 
+    - "{{ mysql.docker_volume }}:/var/lib/mysql:rw"
+    restart: true
+    ports:
+    - "3306:3306"
+    env:  
+      MYSQL_ROOT_PASSWORD: "{{ mysql.root_password }}"
+      MYSQL_DATABASE: "{{ mysql.db_name }}"
+      MYSQL_USER: "{{ mysql.user }}"
+      MYSQL_PASSWORD: "{{ mysql.user_password }}"
+    container_default_behavior: "compatibility"
+
+# - name: MySQL container test
+#   wait_for: 
+#     host: "localhost"
+#     port: "3306"
+#     state: started
+#     timeout: 5
+#     msg: "mysql container feel bad :("

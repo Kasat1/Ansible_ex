@@ -1,0 +1,21 @@
+- name: Run
+  apt:
+    update_cache: yes
+
+- name: Install packages
+  apt:
+    name:
+    - python3
+    - python3-pip
+    state: latest
+
+- name: update puthon
+  set_fact:
+    asnible_python_interpreter: /usr/bin/python3
+
+- name: python packages
+  pip:
+   name:
+   - requests
+   - docker-py
+   executable: pip3
